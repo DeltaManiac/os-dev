@@ -1,32 +1,47 @@
 ; 
-; Demonstrate stack 
+; Demonstrate Conditional operations
+; Converting the follwing condition to asm
+;
+;   mov bx, 30
+;   if (bx  <= 4) 
+;       {mov al, ’A’} 
+;   else if (bx < 40) 
+;       {mov al, ’B’} 
+;   else
+;       {mov al, ’C’}
 ;
 mov ah, 0x0e
 
-mov bp, 0x8000
-mov sp,bp
+;mov bx,00
+mov bx,30
+;mov bx,60
 
-; The stack only allows 16 bit values
-; However we push 8bit values as 16-bit values
-; 'A' - 0x00XX
-push 'A'
-push 'B'
-push 'C'
+cmp bx, 4 
+    ; if comparison is lesser than or equal 
+    ; jump to print_A
+    jle print_A ;
+cmp bx, 40
+    ; if comparison is lesser than 
+    ; jump to print_B
+    jl print_B
+; if nothing passes then 
+; jump to print_B
+jmp print_C
 
-; Since we have pop 16-bit values onto bx
-; we take the lower 8 bits and print those
-pop bx
-mov al,bl
-int 0x10
+print_A:
+    mov al, 'A'
+    jmp finish
 
-pop bx
-mov al,bl
-int 0x10
+print_B:
+    mov al, 'B'
+    jmp finish
 
-mov al,[0x7ffe]
-int 0x10
+print_C:
+    mov al, 'C'
 
-jmp $
+finish:
+    int 0x10
+    jmp $
 
 times 510-($-$$) db 0
 dw 0xaa55
