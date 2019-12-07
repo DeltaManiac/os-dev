@@ -1,47 +1,26 @@
 ; 
-; Demonstrate Conditional operations
-; Converting the follwing condition to asm
+; A boot sector that prints a string using an external function 
 ;
-;   mov bx, 30
-;   if (bx  <= 4) 
-;       {mov al, ’A’} 
-;   else if (bx < 40) 
-;       {mov al, ’B’} 
-;   else
-;       {mov al, ’C’}
-;
-mov ah, 0x0e
 
-;mov bx,00
-mov bx,30
-;mov bx,60
+[org 0x7c00] ; Tell the assembler where the code will be loaded
+mov ah, 0x0e ; int  10/ah = 0eh -> scrolling  teletype  BIOS  routine
 
-cmp bx, 4 
-    ; if comparison is lesser than or equal 
-    ; jump to print_A
-    jle print_A ;
-cmp bx, 40
-    ; if comparison is lesser than 
-    ; jump to print_B
-    jl print_B
-; if nothing passes then 
-; jump to print_B
-jmp print_C
+    mov bx, HELLO_MSG ; We use the BX register as the parameter so we can 
+    call print_string  ; Specify the address of the string
+ 
+    mov bx, GOODBYE_MSG
+    call print_string
 
-print_A:
-    mov al, 'A'
-    jmp finish
-
-print_B:
-    mov al, 'B'
-    jmp finish
-
-print_C:
-    mov al, 'C'
-
-finish:
-    int 0x10
     jmp $
+
+%include "print_string.asm"
+
+; DATA
+HELLO_MSG:
+    db 'Hello, World!',0; We use 0 to indicate the string has terminated
+
+GOODBYE_MSG:
+    db 'Goodbye!',0
 
 times 510-($-$$) db 0
 dw 0xaa55
