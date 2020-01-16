@@ -2,31 +2,40 @@
 ; A boot sector that prints a string using an external function 
 ;
 
-;[org 0x7c00] ; Tell the assembler where the code will be loaded
-bits 16
-mov ah, 0x0e ; int  10/ah = 0eh -> scrolling  teletype  BIOS  routine
+[org 0x7c00] ; Tell the assembler where the code will be loaded
+; bits 16
+; mov ah, 0x0e ; int  10/ah = 0eh -> scrolling  teletype  BIOS  routine
 
 main:
-    mov bx, HELLO_MSG ; We use the BX register as the parameter so we can 
-    call print_string  ; Specify the address of the string
- 
-    mov bx, GOODBYE_MSG
-    call print_string
+    mov [BOOT_DRIVE], dl  
+	mov bp,0x8000
+	mov sp,bp
 
-	mov dx, 0x12BC
+	mov bx,0x9000
+	mov dh,5
+	mov dl,[BOOT_DRIVE]
+	call disk_load
+
+	mov dx,[0x9000]
 	call print_hex
-	call print_string
+
+	mov dx,[0x9000 + 512]
+	call print_hex
+
     jmp $
 
-%include "print_string.asm"
-%include "print_hex.asm"
+%include "./string/print_string.asm"
+%include "./hex/print_hex.asm"
+%include "disk_load.asm"
 
 ; DATA
-HELLO_MSG:
-    db 'Hello, World!',0; We use 0 to indicate the string has terminated
+BOOT_DRIVE:
+	db 0
 
-GOODBYE_MSG:
-    db 'Goodbye!',0
-
+;Boot Sector Padding
 times 510-($-$$) db 0
 dw 0xaa55
+
+
+times 256 dw 0xdada
+times 256 dw 0xface
