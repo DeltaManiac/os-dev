@@ -6,6 +6,7 @@
 
 print_string:
 	pusha ; Push all the registers
+	mov ah,0x0e ; int  10/ah = 0eh -> scrolling  teletype  BIOS  routine
 	loop: 
 		mov al,[bx] ; Copy the value pointed by bx to al, only the lower 8-bits
 					; are copied
