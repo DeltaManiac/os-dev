@@ -1,1 +1,4 @@
-Following alone Nick Blundell's [Writing a Simple Operating System - from Scratch](https://www.cs.bham.ac.uk/~exr/lectures/opsys/10_11/lectures/os-dev.pdf)
+Following along Writing an Os tutorials on the internet
+	1. WaSoS => Writing a Simple Operating System From Scratch by Nick Blundell
+	2. WaOiR => Writing an Operating System in Rust by Phil Oppermann
+
