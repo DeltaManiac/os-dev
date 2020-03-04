@@ -9,12 +9,12 @@ use divios::println;
 
 #[no_mangle]
 pub extern "C" fn _start() -> ! {
-    println!("Hello {}", "Divita");
+    println!("Welcome to {}", "DiviOS v0.1-pre-alpha");
     divios::init();
     #[cfg(test)]
     test_main();
     println!("It no crash!");
-    loop {}
+    divios::hlt_loop();
 }
 
 #[cfg(not(test))]
